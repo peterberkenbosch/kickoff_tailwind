@@ -40,6 +40,7 @@ end
 
 def copy_templates
   directory "app", force: true
+  directory "lib", force: true
 end
 
 def add_tailwind
