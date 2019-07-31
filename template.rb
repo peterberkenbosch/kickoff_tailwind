@@ -11,10 +11,10 @@ end
 
 def add_gems
   gem 'devise', '~> 4.6', '>= 4.6.2'
-  gem 'friendly_id', '~> 5.2', '>= 5.2.5'
   gem 'sidekiq', '~> 5.2', '>= 5.2.7'
   gem_group :development, :test do
     gem 'better_errors'
+    gem 'rspec-rails', '~> 3.8'
   end
 end
 
@@ -43,7 +43,6 @@ def copy_templates
 end
 
 def add_tailwind
-  # beta version for now
   run "yarn add tailwindcss"
   run "mkdir app/javascript/stylesheets"
   append_to_file("app/javascript/packs/application.js", 'import "stylesheets/application"')
@@ -51,6 +50,10 @@ def add_tailwind
   "var tailwindcss = require('tailwindcss');\n",  before: "module.exports")
   inject_into_file("./postcss.config.js", "\n    tailwindcss('./app/javascript/stylesheets/tailwind.config.js'),", after: "plugins: [")
   run "mkdir app/javascript/stylesheets/components"
+end
+
+def add_stimulus
+  rails_command 'webpacker:install:stimulus'
 end
 
 # Remove Application CSS
@@ -77,16 +80,6 @@ def add_foreman
   copy_file "Procfile"
 end
 
-def add_friendly_id
-  generate "friendly_id"
-
-  insert_into_file(
-    Dir["db/migrate/**/*friendly_id_slugs.rb"].first,
-    "[5.2]",
-    after: "ActiveRecord::Migration"
-  )
-end
-
 def stop_spring
   run "spring stop"
 end
@@ -104,11 +97,13 @@ after_bundle do
   add_foreman
   copy_templates
   add_tailwind
-  add_friendly_id
+  add_stimulus
 
   # Migrate
   rails_command "db:create"
   rails_command "db:migrate"
+
+  generate "rspec:install"
 
   git :init
   git add: "."
