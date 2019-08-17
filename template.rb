@@ -134,5 +134,5 @@ after_bundle do
   say "$ cd #{app_name}", :yellow
   say
   say "Then run:"
-  say "$ rails server", :green
+  say "$ foreman start", :green
 end
