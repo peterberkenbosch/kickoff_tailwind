@@ -2,18 +2,6 @@
 
 Based on the great work done by [Andy Leverenz](https://github.com/justalever/kickoff_tailwind), customized to my personal needs and preferences. 
 
-### Included gems
-
-- [devise](https://github.com/plataformatec/devise)
-- [sidekiq](https://github.com/mperham/sidekiq)
-
-### Tailwind CSS by default
-With Rails 6 we have webpacker by default now. Using PostCSS we can install Tailwind as a base CSS framework to harness. I prefer Tailwind due to it's un-opinionated approach.
-
-## How it works
-
-When creating a new rails app simply pass the template file through.
-
 ### Creating a new app
 
 ```bash
@@ -22,8 +10,7 @@ $ rails new sample_app -d <postgresql, mysql, sqlite> -m template.rb
 
 ### Once installed what do I get?
 
-- Webpack support + Tailwind CSS configured in the `app/javascript` directory.
-- Devise with a new `username` and `name` field already migrated in. Enhanced views using Tailwind CSS.
+- Webpack support + Tailwind CSS and StimulusJS configured in the `app/javascript` directory.
 - Optional Foreman support thanks to a `Profile`. Once you scaffold the template, run `foreman start` to initalize and head to `locahost:5000` to get `rails server`, `sidekiq` and `webpack-dev-server` running all in one terminal instance. Note: Webpack will still compile down with just `rails server` if you don't want to use Foreman. Foreman needs to be installed as a global gem on your system for this to work. i.e. `gem install foreman`
 - Git initialization out of the box
 
