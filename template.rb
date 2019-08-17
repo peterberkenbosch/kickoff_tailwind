@@ -10,11 +10,15 @@ def source_paths
 end
 
 def add_gems
-  gem 'devise', '~> 4.6', '>= 4.6.2'
-  gem 'sidekiq', '~> 5.2', '>= 5.2.7'
+  gem 'devise', github: 'plataformatec/devise'
+  gem 'sidekiq'
+
   gem_group :development, :test do
     gem 'better_errors'
-    gem 'rspec-rails', '~> 3.8'
+    gem 'rspec-rails'
+    gem 'capybara'
+    gem 'selenium-webdriver'
+    gem 'webdrivers'
   end
 end
 
@@ -40,6 +44,17 @@ end
 
 def copy_templates
   directory "app", force: true
+end
+
+def copy_spec_config
+  directory "spec", force: true
+
+  # uncomment spec/support loading
+  in_root do
+    rails_helper = File.new("spec/rails_helper.rb")
+
+    gsub_file rails_helper, "# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }", "Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }"
+  end
 end
 
 def add_tailwind
@@ -104,6 +119,8 @@ after_bundle do
   rails_command "db:migrate"
 
   generate "rspec:install"
+
+  copy_spec_config
 
   git :init
   git add: "."
