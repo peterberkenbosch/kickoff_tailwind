@@ -21,6 +21,7 @@ def add_gems
     gem 'capybara'
     gem 'selenium-webdriver'
     gem 'webdrivers'
+    gem "factory_bot_rails"
   end
 end
 
