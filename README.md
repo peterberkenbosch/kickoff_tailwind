@@ -1,6 +1,6 @@
 # Rails Kickoff
 
-Based on the great work done by [Andy Leverenz](https://github.com/justalever/kickoff_tailwind), customized to my personal needs and preferences. 
+Based on the great work done by [Andy Leverenz](https://github.com/justalever/kickoff_tailwind), customized to my personal needs and preferences.
 
 ### Creating a new app
 
@@ -11,7 +11,7 @@ $ rails new sample_app -d <postgresql, mysql, sqlite> -m template.rb
 ### Once installed what do I get?
 
 - Webpack support + Tailwind CSS and StimulusJS configured in the `app/javascript` directory.
-- Optional Foreman support thanks to a `Profile`. Once you scaffold the template, run `foreman start` to initalize and head to `locahost:5000` to get `rails server`, `sidekiq` and `webpack-dev-server` running all in one terminal instance. Note: Webpack will still compile down with just `rails server` if you don't want to use Foreman. Foreman needs to be installed as a global gem on your system for this to work. i.e. `gem install foreman`
+- Optional Foreman support thanks to a `Profile`. Once you scaffold the template, run `foreman start` to initialize and head to `locahost:5000` to get `rails server`, `sidekiq` and `webpack-dev-server` running all in one terminal instance. Note: Webpack will still compile down with just `rails server` if you don't want to use Foreman. Foreman needs to be installed as a global gem on your system for this to work. i.e. `gem install foreman`
 - Git initialization out of the box
 
 #### Booting your local server with redis
