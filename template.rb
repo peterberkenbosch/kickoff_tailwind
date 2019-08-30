@@ -10,7 +10,7 @@ def source_paths
 end
 
 def add_gems
-  gem 'devise', github: 'plataformatec/devise'
+  gem 'devise', '~> 4.7'
   gem 'sidekiq'
 
   gem 'simplecov', require: false, group: :test
