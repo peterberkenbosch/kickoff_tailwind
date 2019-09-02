@@ -29,11 +29,20 @@ def add_users
   # Install Devise
   generate "devise:install"
 
-  # Configure default url, for Devise etc.
+  # Configure Devise
   environment "config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }",
               env: 'development'
 
   route "root to: 'home#index'"
+
+  # Create Devise User
+  generate :devise, "User", "username", "name", "admin:boolean"
+
+  # set admin boolean to false by default
+  in_root do
+    migration = Dir.glob("db/migrate/*").max_by{ |f| File.mtime(f) }
+    gsub_file migration, /:admin/, ":admin, default: false"
+  end
 end
 
 def copy_templates
