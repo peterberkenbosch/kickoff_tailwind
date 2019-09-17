@@ -9,11 +9,19 @@ def source_paths
   [File.expand_path(File.dirname(__FILE__))]
 end
 
-def add_gems
-  gem 'devise', '~> 4.7'
-  gem 'sidekiq'
+def set_application_name
+  # Add Application Name to Config
+  environment "config.application_name = Rails.application.class.module_parent_name"
+end
 
-  gem 'simplecov', require: false, group: :test
+def add_gems
+  gem 'devise', '~> 4.7', '>= 4.7.1'
+  gem 'sidekiq'
+  gem 'mailgun-ruby'
+  gem 'name_of_person'
+  gem 'devise_masquerade', '~> 0.6.2'
+  gem 'devise_invitable', '~> 2.0.0'
+  gem 'friendly_id', '~> 5.2', '>= 5.2.5'
 
   gem_group :development, :test do
     gem 'better_errors'
@@ -21,8 +29,18 @@ def add_gems
     gem 'capybara'
     gem 'selenium-webdriver'
     gem 'webdrivers'
-    gem "factory_bot_rails"
-    gem "fuubar"
+    gem 'factory_bot_rails'
+    gem 'fuubar'
+    gem 'binding_of_caller'
+    gem 'brakeman'
+    gem 'bundler-audit'
+    gem 'letter_opener_web', '~> 1.3', '>= 1.3.4'
+    gem 'strong_migrations'
+  end
+
+  gem_group :test do
+    gem 'simplecov', require: false
+    gem "test-prof"
   end
 end
 
@@ -31,19 +49,36 @@ def add_users
   generate "devise:install"
 
   # Configure Devise
-  environment "config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }",
+  environment "config.action_mailer.default_url_options = { host: 'localhost', port: 5000 }",
               env: 'development'
 
   route "root to: 'home#index'"
 
   # Create Devise User
-  generate :devise, "User", "username", "name", "admin:boolean"
+  generate :devise, "User", "first_name", "last_name", "admin:boolean"
 
   # set admin boolean to false by default
   in_root do
     migration = Dir.glob("db/migrate/*").max_by{ |f| File.mtime(f) }
     gsub_file migration, /:admin/, ":admin, default: false"
   end
+
+  gsub_file "config/initializers/devise.rb",
+      /  # config.secret_key = .+/,
+      "  config.secret_key = Rails.application.credentials.secret_key_base"
+
+  # Add Devise masqueradable to users
+  inject_into_file("app/models/user.rb", "masqueradable, :", after: "devise :")
+end
+
+def configure_letter_opener
+  environment "config.action_mailer.delivery_method = :letter_opener", env: 'development'
+  environment "config.action_mailer.perform_deliveries = true", env: 'development'
+end
+
+def add_devise_invitable
+  generate "devise_invitable:install"
+  generate "devise_invitable User"
 end
 
 def copy_templates
@@ -115,6 +150,10 @@ def add_foreman
   copy_file "Procfile"
 end
 
+def add_friendly_id
+  generate "friendly_id"
+end
+
 def stop_spring
   run "spring stop"
 end
@@ -125,18 +164,21 @@ source_paths
 add_gems
 
 after_bundle do
+  set_application_name
   stop_spring
   add_users
+  add_devise_invitable
   remove_app_css
   add_sidekiq
   add_foreman
+  add_friendly_id
   copy_templates
   add_tailwind
   add_stimulus
 
   # Migrate
   rails_command "db:create"
-  rails_command "db:migrate"
+  run "SAFETY_ASSURED=1 bundle exec rails db:migrate"
 
   generate "rspec:install"
 
