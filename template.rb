@@ -27,6 +27,8 @@ def add_gems
     gem 'better_errors'
     gem 'rspec-rails'
     gem 'capybara'
+    gem 'capybara-email'
+    gem 'launchy'
     gem 'selenium-webdriver'
     gem 'webdrivers'
     gem 'factory_bot_rails'
@@ -94,6 +96,12 @@ def copy_spec_config
 
     gsub_file rails_helper, "# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }", "Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }"
   end
+  content = <<-RUBY
+    require 'capybara/rails'
+    require 'capybara/email/rspec'
+  RUBY
+
+  insert_into_file 'spec/rails_helper.rb',"#{content}\n\n", after: "require 'rspec/rails'"
 
   content = <<-RUBY
     require 'simplecov'
