@@ -84,6 +84,10 @@ def copy_templates
   directory "app", force: true
 end
 
+def copy_github_workflows
+  directory ".github", force: true
+end
+
 def copy_spec_config
   directory "spec", force: true
 
@@ -186,11 +190,12 @@ after_bundle do
   add_foreman
   add_friendly_id
   copy_templates
+  copy_github_workflows
   add_tailwind
   add_stimulus
   add_awesome_rails_console
   add_action_policy
-  
+
   # Migrate
   rails_command "db:create"
   run "SAFETY_ASSURED=1 bundle exec rails db:migrate"
