@@ -22,6 +22,7 @@ def add_gems
   gem 'devise_masquerade', '~> 0.6.2'
   gem 'friendly_id', '~> 5.2', '>= 5.2.5'
   gem 'awesome_rails_console'
+  gem "action_policy"
 
   gem_group :development, :test do
     gem 'better_errors'
@@ -95,6 +96,7 @@ def copy_spec_config
   content = <<-RUBY
   require 'capybara/rails'
   require 'capybara/email/rspec'
+  require 'action_policy/rspec/dsl'
   RUBY
   insert_into_file 'spec/rails_helper.rb',"\n\n#{content}\n\n", after: "require 'rspec/rails'"
 
@@ -166,6 +168,10 @@ def add_awesome_rails_console
   run 'bundle'
 end
 
+def add_action_policy
+  generate 'action_policy:install'
+end
+
 # Main setup
 source_paths
 
@@ -182,16 +188,15 @@ after_bundle do
   copy_templates
   add_tailwind
   add_stimulus
-
+  add_awesome_rails_console
+  add_action_policy
+  
   # Migrate
   rails_command "db:create"
   run "SAFETY_ASSURED=1 bundle exec rails db:migrate"
 
   generate "rspec:install"
-
   copy_spec_config
-
-  add_awesome_rails_console
 
   git :init
   git add: "."
