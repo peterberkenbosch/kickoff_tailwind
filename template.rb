@@ -97,11 +97,10 @@ def copy_spec_config
     gsub_file rails_helper, "# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }", "Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }"
   end
   content = <<-RUBY
-    require 'capybara/rails'
-    require 'capybara/email/rspec'
+  require 'capybara/rails'
+  require 'capybara/email/rspec'
   RUBY
-
-  insert_into_file 'spec/rails_helper.rb',"#{content}\n\n", after: "require 'rspec/rails'"
+  insert_into_file 'spec/rails_helper.rb',"\n\n#{content}\n\n", after: "require 'rspec/rails'"
 
   content = <<-RUBY
     require 'simplecov'
