@@ -21,6 +21,7 @@ def add_gems
   gem 'name_of_person'
   gem 'devise_masquerade', '~> 0.6.2'
   gem 'friendly_id', '~> 5.2', '>= 5.2.5'
+  gem 'awesome_rails_console'
 
   gem_group :development, :test do
     gem 'better_errors'
@@ -37,6 +38,7 @@ def add_gems
     gem 'bundler-audit'
     gem 'letter_opener_web', '~> 1.3', '>= 1.3.4'
     gem 'strong_migrations'
+    gem 'pry-byebug'
   end
 
   gem_group :test do
@@ -159,6 +161,11 @@ def stop_spring
   run "spring stop"
 end
 
+def add_awesome_rails_console
+  generate 'awesome_rails_console:install'
+  run 'bundle'
+end
+
 # Main setup
 source_paths
 
@@ -183,6 +190,8 @@ after_bundle do
   generate "rspec:install"
 
   copy_spec_config
+
+  add_awesome_rails_console
 
   git :init
   git add: "."
