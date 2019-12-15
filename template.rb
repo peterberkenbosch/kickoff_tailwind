@@ -20,6 +20,7 @@ def add_gems
   gem 'mailgun-ruby'
   gem 'name_of_person'
   gem 'devise_masquerade', '~> 0.6.2'
+  gem 'devise_invitable', '~> 2.0.0'
   gem 'friendly_id', '~> 5.2', '>= 5.2.5'
   gem 'awesome_rails_console'
   gem "action_policy"
@@ -73,6 +74,11 @@ def add_users
 
   # Add Devise masqueradable to users
   inject_into_file("app/models/user.rb", "masqueradable, :", after: "devise :")
+end
+
+def add_devise_invitable
+  generate 'devise_invitable:install'
+  generate 'devise_invitable User'
 end
 
 def configure_letter_opener
@@ -185,6 +191,7 @@ after_bundle do
   set_application_name
   stop_spring
   add_users
+  add_devise_invitable
   remove_app_css
   add_sidekiq
   add_foreman
