@@ -2,7 +2,7 @@
 Template Name: Kickstart application template - Tailwind CSS
 Author: Andy Leverenz
 Author URI: https://web-crunch.com
-Instructions: $ rails new myapp -d <postgresql, mysql, sqlite> -m template.rb
+Instructions: $ rails new myapp -T -d postgresql -m template.rb
 =end
 
 def source_paths
